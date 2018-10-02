@@ -13,8 +13,6 @@ class GlobalDbRecordCounter
 {
     public static function  countDbRecordIsExactlelOne($records){
 
-
-
         if((count($records) === 1)){
             return true;
         }else{

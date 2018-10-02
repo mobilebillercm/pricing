@@ -18,64 +18,12 @@ use App\Domain\Model\service\ServiceWithNoUnitPriceAssigned;
 use App\Domain\Model\service\ServiceWithUnitPriceAssigned;
 use App\Domain\Model\unit\Unit;
 use App\Domain\service\UnitQuantityIntervalDiscountFactorValidatorService;
+use App\Jobs\ProccessMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ServiceController extends  Controller
 {
-
-    public function registerUnpricedServiceFromServicesContext(){
-
-
-        $dataJson = file_get_contents('php://input');
-        $dataArray =  json_decode($dataJson, true);
-
-        if(!$dataArray){
-            return response(GlobalResultHandler::buildFaillureReasonArray("Invalid Data"), 200);
-        }
-
-        $validationrules =  [
-            'serviceid' => GlobalDtoValidator::requireStringMinMax(1, 150),
-            'name' => GlobalDtoValidator::requireStringMinMax(1, 150),
-            'description' => GlobalDtoValidator::requireStringMinMax(1, 100),
-        ];
-
-        $validator = GlobalDtoValidator::validateData($dataArray, $validationrules) ;
-
-
-        if ($validator->fails()) {
-
-            return response(GlobalResultHandler::buildFaillureReasonArray($validator->errors()->first()), 200);
-
-        }
-
-        $unpricedServiceToRegister = new ServiceWithNoUnitPriceAssigned(
-            $dataArray['serviceid'],
-            $dataArray['name'],
-            $dataArray['description']
-        );
-
-
-
-        DB::beginTransaction();
-
-        try{
-
-            $unpricedServiceToRegister->save();
-
-        }catch (\Exception $e){
-
-            DB::rollBack();
-            return response(GlobalResultHandler::buildFaillureReasonArray('Unable to register Unpriced Service'), 200);
-        }
-
-        DB::commit();
-
-        return response(GlobalResultHandler::buildSuccesResponseArray('Unpriced Service Registered Successfully'), 200);
-
-
-    }
-
 
     public function defineUnitPriceForUnPriceService(Request $request){
 
@@ -179,11 +127,10 @@ class ServiceController extends  Controller
 
 
 
+        $checkThereisACorrespondantUnpricedService->delete();
+        $serviceWithUnitPriceToRegister->save();
 
 
-
-            $checkThereisACorrespondantUnpricedService->delete();
-            $serviceWithUnitPriceToRegister->save();
 
         }catch (\Exception $e){
 
@@ -196,12 +143,13 @@ class ServiceController extends  Controller
         DB::commit();
 
 
+        ProccessMessage::dispatch(env('SERVICE_UNIT_PRICE_DEFINED_EXCHANGE'), env('RABBIT_MQ_EXCHANGE_TYPE'), json_encode($serviceWithUnitPriceToRegister));
+
+
+
         return response(GlobalResultHandler::buildSuccesResponseArray("Service Unit Price defined successfully"), 200);
 
 
     }
-
-
-
 
 }

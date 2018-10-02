@@ -24,14 +24,14 @@ use Illuminate\Http\Request;
 
 
 ///API ROUTES
-Route::post('/unpriced-services', 'ServiceController@registerUnpricedServiceFromServicesContext');
+Route::post('/unpriced-services', 'ApiController@registerUnpricedServiceFromServicesContext')->middleware('rabbitmq.client');
 
 
 
 ///CONTEXT ROUTES
-Route::post('/define-price-for-unpriced-servivices', 'ServiceController@defineUnitPriceForUnPriceService');
+Route::post('/define-price-for-unpriced-servivices', 'ServiceController@defineUnitPriceForUnPriceService')->middleware('token.verification');
 
-Route::post('/calculate-paid-service-price', 'PricingController@calculateBasicServicePrice');
+Route::post('/calculate-paid-service-price', 'PricingController@calculateBasicServicePrice')->middleware('token.verification');
 
 
 

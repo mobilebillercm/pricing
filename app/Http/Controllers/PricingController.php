@@ -22,8 +22,6 @@ use Illuminate\Http\Request;
 class PricingController extends  Controller
 {
 
-
-
     public function calculateBasicServicePrice(Request $request){
 
 
@@ -59,7 +57,6 @@ class PricingController extends  Controller
         return PriceCalculationService::calculateBasicServicePrice($serviceToPrice, new UnitQuantity($request->get('unitquantity')), $unitQuantityIntervalDiscountFactors);
 
     }
-
 
 
 }
