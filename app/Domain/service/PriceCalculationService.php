@@ -33,6 +33,7 @@ class PriceCalculationService
             if( $serviceUnitQuantity >= $allUnitQuantityIntervalDiscountFactors[$i]->lowerbound and $serviceUnitQuantity < $allUnitQuantityIntervalDiscountFactors[$i]->upperbound){
 
                 $unitQuantityIntervalDiscountFactor =  $allUnitQuantityIntervalDiscountFactors[$i];
+                //return json_encode($unitQuantityIntervalDiscountFactor);
 
                 $serviceTotalPrice = $serviceUnitPrice * $serviceUnitQuantity * (1 - $unitQuantityIntervalDiscountFactor->reductionfactor);
 

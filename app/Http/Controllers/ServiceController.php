@@ -29,6 +29,8 @@ class ServiceController extends  Controller
 
 
 
+        //return $request;
+
         $validationrules = [
             'serviceid' => GlobalDtoValidator::requireStringMinMax(1, 150),
             'unitname' => GlobalDtoValidator::requireStringMinMax(1, 10),
@@ -127,7 +129,8 @@ class ServiceController extends  Controller
 
 
 
-        $checkThereisACorrespondantUnpricedService->delete();
+        //return $serviceWithUnitPriceToRegister;
+        //$checkThereisACorrespondantUnpricedService->delete();
         $serviceWithUnitPriceToRegister->save();
 
 

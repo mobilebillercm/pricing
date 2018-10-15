@@ -36,9 +36,9 @@ class ApiController extends  Controller
         }
 
         $validationrules =  [
-            'serviceid' => GlobalDtoValidator::requireStringMinMax(1, 150),
+            'b_id' => GlobalDtoValidator::requireStringMinMax(1, 150),
             'name' => GlobalDtoValidator::requireStringMinMax(1, 150),
-            'description' => GlobalDtoValidator::requireStringMinMax(1, 100),
+            'description' => 'required|string|min:1',
         ];
 
         $validator = GlobalDtoValidator::validateData($dataArray, $validationrules) ;
@@ -51,7 +51,7 @@ class ApiController extends  Controller
         }
 
         $unpricedServiceToRegister = new ServiceWithNoUnitPriceAssigned(
-            $dataArray['serviceid'],
+            $dataArray['b_id'],
             $dataArray['name'],
             $dataArray['description']
         );

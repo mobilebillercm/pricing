@@ -52,27 +52,28 @@
 
 
 
-        echo ' [*] Waiting for resgistered users. To exit press CTRL+C', "\n";
+        echo ' [*] Waiting for service created. To exit press CTRL+C', "\n";
 
 
 
         $callback = function ($msg) {
 
 
+            echo $msg->body .'\n\n';
             $client = new client();
             $token  = null;
 
             try {
 
 
-                $tokenUrl = parse_ini_file('global-var-config.ini',true)['URLS']['PRICING_HOST'].'/oauth/token';
+                $tokenUrl = parse_ini_file('global-var-config.ini',true)['URLS']['HOST_PRICING'].'/oauth/token';
 
 
                 $tokenData = $client->post($tokenUrl, [
                     'form_params' => [
                         'grant_type' => 'client_credentials',
-                        'client_id' => parse_ini_file("global-var-config.ini",true)['LOGINS']['PRICING_CLIENT_ID'],
-                        'client_secret' => parse_ini_file("global-var-config.ini",true)['LOGINS']['PRICING_CLIENT_SECRET'],
+                        'client_id' => parse_ini_file("global-var-config.ini",true)['LOGINS']['RABBIT_MQ_CLIENT_ID'],
+                        'client_secret' => parse_ini_file("global-var-config.ini",true)['LOGINS']['RABBIT_MQ_CLIENT_SECRET'],
                     ],
                 ]);
 
@@ -90,10 +91,11 @@
             }
 
 
+            echo $token->access_token.'\n\n';
 
             try{
 
-                $url = parse_ini_file('global-var-config.ini',true)['URLS']['PRICING_HOST'].'/api/unpriced-services';
+                $url = parse_ini_file('global-var-config.ini',true)['URLS']['HOST_PRICING'].'/api/unpriced-services';
 
 
                 $res = $client->post($url, [

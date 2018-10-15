@@ -29,9 +29,9 @@ Route::post('/unpriced-services', 'ApiController@registerUnpricedServiceFromServ
 
 
 ///CONTEXT ROUTES
-Route::post('/define-price-for-unpriced-servivices', 'ServiceController@defineUnitPriceForUnPriceService')->middleware('token.verification');
+Route::post('/define-price-for-unpriced-services', 'ServiceController@defineUnitPriceForUnPriceService')->middleware('token.verification');
 
-Route::post('/calculate-paid-service-price', 'PricingController@calculateBasicServicePrice')->middleware('token.verification');
+Route::get('/calculate-paid-service-price/{serviceid}/{quantity}', 'PricingController@calculateBasicServicePrice');
 
 
 

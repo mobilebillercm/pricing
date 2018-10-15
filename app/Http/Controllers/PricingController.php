@@ -22,10 +22,10 @@ use Illuminate\Http\Request;
 class PricingController extends  Controller
 {
 
-    public function calculateBasicServicePrice(Request $request){
+    public function calculateBasicServicePrice(Request $request, $serviceid, $quantity){
 
 
-        $validationrules = [
+       /* $validationrules = [
 
             'serviceid' => GlobalDtoValidator::requireStringMinMax(1, 150),
             //'tenantid' => GlobalDtoValidator::requireStringMinMax(1, 150),
@@ -35,14 +35,15 @@ class PricingController extends  Controller
         $validator = GlobalDtoValidator::validateData($request->all(), $validationrules) ;
 
 
-        if ($validator->fails()) {return response(GlobalResultHandler::buildFaillureReasonArray($validator->errors()->first()), 200);}
+        if ($validator->fails()) {return response(GlobalResultHandler::buildFaillureReasonArray($validator->errors()->first()), 200);}*/
 
 
 
-        $serviceToPrices = ServiceWithUnitPriceAssigned::where('serviceid', '=', $request->get('serviceid'))->get();
+        $serviceToPrices = ServiceWithUnitPriceAssigned::where('serviceid', '=', $serviceid)->get();
 
         $unitQuantityIntervalDiscountFactors = json_decode($serviceToPrices[0]->unitquantityintervaldiscountsactors);
 
+        //return $serviceToPrices[0];
 
         if(!(GlobalDbRecordCounter::countDbRecordIsExactlelOne($serviceToPrices)) or !(GlobalDbRecordCounter::countDbRecordIsMultipleOrOne($unitQuantityIntervalDiscountFactors)) ){
 
@@ -53,8 +54,9 @@ class PricingController extends  Controller
             $serviceToPrice = $serviceToPrices[0];
         }
 
+        //return $quantity;
 
-        return PriceCalculationService::calculateBasicServicePrice($serviceToPrice, new UnitQuantity($request->get('unitquantity')), $unitQuantityIntervalDiscountFactors);
+        return PriceCalculationService::calculateBasicServicePrice($serviceToPrice, new UnitQuantity($quantity), $unitQuantityIntervalDiscountFactors);
 
     }
 
