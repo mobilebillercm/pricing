@@ -53,8 +53,7 @@ class ServiceController extends  Controller
 
         $unitQuantityIntervalDiscountFactor = [];
 
-
-        for ($j = 0; $request->get('reductionfactor' . $j); $j++) {
+        for ($j = 0; !($request->get('reductionfactor' . $j) === null); $j++) {
 
             $lowerbound_j = $request->get('lowerbound' . $j);
             $upperbound_j = $request->get('upperbound' . $j);
@@ -122,12 +121,15 @@ class ServiceController extends  Controller
         }
 
 
+
+
         $serviceWithUnitPriceToRegister = new ServiceWithUnitPriceAssigned( $checkThereisACorrespondantUnpricedService->service_id,$checkThereisACorrespondantUnpricedService->name,
                                                                             $checkThereisACorrespondantUnpricedService->description, $checkThereisACorrespondantUnit->name,
                                                                             $request->get('unitamount'), $checkThereisACorrespondantCurrency->name,
                                                                             json_encode($unitQuantityIntervalDiscountFactor,JSON_UNESCAPED_SLASHES));
 
 
+        //return json_encode($serviceWithUnitPriceToRegister);
 
         //return $serviceWithUnitPriceToRegister;
         //$checkThereisACorrespondantUnpricedService->delete();

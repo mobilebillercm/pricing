@@ -42,7 +42,21 @@ class PriceCalculationService
             }
         }
 
-        $serviceTotalPrice = $serviceUnitPrice * $serviceUnitQuantity * (1 - 0);
+       //$serviceTotalPrice = $serviceUnitPrice * $serviceUnitQuantity * (1 - 0);
+
+
+        $serviceTotalPrice = null;
+
+        if($serviceUnitQuantity >= $allUnitQuantityIntervalDiscountFactors[count($allUnitQuantityIntervalDiscountFactors) - 1]->upperbound){
+
+            $unitQuantityIntervalDiscountFactor =  $allUnitQuantityIntervalDiscountFactors[count($allUnitQuantityIntervalDiscountFactors) - 1];
+
+            $serviceTotalPrice = $serviceUnitPrice * $serviceUnitQuantity * (1 - $unitQuantityIntervalDiscountFactor->reductionfactor);
+        }else{
+            $serviceTotalPrice = $serviceUnitPrice * $serviceUnitQuantity * (1 - 0);
+
+        }
+
 
         return response(GlobalResultHandler::buildSuccesResponseArray(new Price(new Amount($serviceTotalPrice), new Currency('',$serviceUnitCurrency))));
 
